@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
         id_habitacion: {
             type: Sequelize.INTEGER,
             references: {
-                model: 'habitaciones',
+                model: 'habitacion',
                 key: 'id_habitacion'
             }
         },
@@ -23,7 +23,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DATE
         },
         fecha_salida: {
-            type: Sequelize.DATE
+            type: Sequelize.DATE,
+        },
+        total: {
+            type: Sequelize.DOUBLE,
+        },
+        metodo_pago: {
+            type: Sequelize.STRING(20)
         },
         situacion: {
             type: Sequelize.STRING(20)
@@ -32,6 +38,21 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: true
         }
+    }, {
+        timestamps: false // Desactiva los campos createdAt y updatedAt
     });
+
+     // Definición de relaciones
+     Reserva.associate = (models) => {
+        Reserva.belongsTo(models.Cliente, {
+            foreignKey: 'id_cliente',
+            as: 'cliente' // Nombre del alias en las relaciones
+        });
+        Reserva.belongsTo(models.Habitacion, {
+            foreignKey: 'id_habitacion',
+            as: 'habitacion' // Nombre del alias en las relaciones
+        });
+    };
+
     return Reserva;
 };

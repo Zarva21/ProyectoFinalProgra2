@@ -14,6 +14,17 @@ module.exports = (sequelize, Sequelize) => {
         precio: {
             type: Sequelize.DOUBLE
         }
+    }, {
+        tableName: 'tipo_habitacion', // Especifica el nombre de la tabla aquí
+        timestamps: false // Desactiva los campos createdAt y updatedAt
     });
+
+    TipoHabitacion.associate = (models) => {
+        TipoHabitacion.hasMany(models.Habitacion, {
+            foreignKey: 'id_tipo_habitacion',
+            as: 'habitaciones'
+        });
+    };
+
     return TipoHabitacion;
 };

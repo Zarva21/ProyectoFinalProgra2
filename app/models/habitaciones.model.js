@@ -8,12 +8,13 @@ module.exports = (sequelize, Sequelize) => {
         id_tipo_habitacion: {
             type: Sequelize.INTEGER,
             references: {
-                model: 'tipos_habitacion',
+                model: 'tipo_habitacion', // Nombre de la tabla en plural
                 key: 'id_tipo_habitacion'
             }
         },
         numero_cuarto: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            
         },
         disponible: {
             type: Sequelize.BOOLEAN,
@@ -23,6 +24,17 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: true
         }
+    }, {
+        tableName: 'habitacion',
+        timestamps: false // Desactiva los campos createdAt y updatedAt
     });
+
+    Habitacion.associate = (models) => {
+        Habitacion.belongsTo(models.TipoHabitacion, {
+            foreignKey: 'id_tipo_habitacion',
+            as: 'tipoHabitacion' // Alias para la relación
+        });
+    };
+    
     return Habitacion;
 };

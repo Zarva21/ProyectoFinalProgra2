@@ -31,9 +31,12 @@ db.Empleados = require('../models/empleados.model.js')(sequelize, Sequelize);
 db.Clientes = require('../models/clientes.model.js')(sequelize, Sequelize);
 db.RolUsuario = require('../models/rolesdeusuario.model.js')(sequelize, Sequelize); // Asegúrate de crear este modelo
 db.Usuario = require('../models/usuarios.model.js')(sequelize, Sequelize); // Asegúrate de crear este modelo
+db.TipoHabitacion = require('../models/tiposdehabitacion.model.js')(sequelize, Sequelize);
+db.Habitacion = require('../models/habitaciones.model.js')(sequelize, Sequelize);
+db.Reserva = require('../models/reservas.model.js')(sequelize, Sequelize);
 
 
-
-
+db.TipoHabitacion.associate(db);
+db.Habitacion.associate(db);
 
 module.exports = db;
