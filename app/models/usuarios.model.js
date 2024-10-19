@@ -31,7 +31,16 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-
+    Usuario.associate = (models) => {
+        Usuario.belongsTo(models.RolUsuario, {
+            foreignKey: 'id_rol_usuario',
+            as: 'rol'
+        });
+        Usuario.belongsTo(models.Persona, {
+            foreignKey: 'id_persona',
+            as: 'persona'
+        });
+    };
     
     return Usuario;
 };

@@ -16,5 +16,13 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: true
         }
     });
+
+    RolUsuario.associate = (models) => {
+        RolUsuario.hasMany(models.Usuario, {
+            foreignKey: 'id_rol_usuario',
+            as: 'usuarios'
+        });
+    };
+
     return RolUsuario;
 };
