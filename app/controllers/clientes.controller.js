@@ -42,17 +42,25 @@ exports.createCliente = async (req, res) => {
 // Actualizar un cliente por ID
 exports.updateClienteById = async (req, res) => {
     try {
-        const id_cliente = req.params.id;
+        const id_cliente = req.params.id; // ID del cliente a actualizar
         const { nombre, apellido, fecha_nacimiento, nit, correo, genero, dpi, numero, id_tipo_cliente } = req.body;
 
         // Obtener el cliente por ID
-        const clienteExistente = await Cliente.findByPk(id_cliente, { include: Persona });
+        const clienteExistente = await Cliente.findByPk(id_cliente);
         if (!clienteExistente) {
             return res.status(404).json({ message: `Cliente con id ${id_cliente} no encontrado` });
         }
 
-        // Actualizar la información de la persona relacionada
-        const persona = clienteExistente.Persona; // Obtener la persona relacionada
+        // Obtener el id_persona del cliente existente
+        const id_persona = clienteExistente.id_persona;
+
+        // Obtener la persona relacionada
+        const persona = await Persona.findByPk(id_persona);
+        if (!persona) {
+            return res.status(404).json({ message: `Persona con id ${id_persona} no encontrada` });
+        }
+
+        // Actualizar la información de la persona
         persona.nombre = nombre;
         persona.apellido = apellido;
         persona.fecha_nacimiento = fecha_nacimiento;
@@ -65,7 +73,7 @@ exports.updateClienteById = async (req, res) => {
         await persona.save(); // Guardar los cambios en la tabla Personas
 
         // Actualizar el cliente
-        clienteExistente.id_tipo_cliente = id_tipo_cliente;
+        clienteExistente.id_tipo_cliente = id_tipo_cliente; // Asegúrate de que id_tipo_cliente está en el body
         await clienteExistente.save(); // Guardar los cambios en la tabla Clientes
 
         res.status(200).json({
@@ -81,21 +89,7 @@ exports.updateClienteById = async (req, res) => {
     }
 };
 
-// Obtener todos los clientes --- borrar luego 
-exports.getAllClientes = async (req, res) => {
-    try {
-        const clientes = await Cliente.findAll({ include: Persona });
-        res.status(200).json({
-            message: "Clientes recuperados exitosamente",
-            clientes
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: "Error al recuperar clientes",
-            error: error.message
-        });
-    }
-};
+
 
 // Eliminar (cambiar estado) un cliente por ID
 exports.deleteClienteById = async (req, res) => {

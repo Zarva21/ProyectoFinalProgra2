@@ -25,8 +25,8 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.Persona = require('../models/personas.model.js')(sequelize, Sequelize);
-db.Cliente = require('../models/clientes.model.js')(sequelize, Sequelize);
+db.Personas = require('../models/personas.model.js')(sequelize, Sequelize);
+db.Clientes = require('../models/clientes.model.js')(sequelize, Sequelize);
 
 
 

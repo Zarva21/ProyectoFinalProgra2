@@ -1,3 +1,4 @@
+// personas.model.js
 module.exports = (sequelize, Sequelize) => {
     const Persona = sequelize.define('persona', {
         id_persona: {
@@ -34,5 +35,11 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: true
         }
     });
+
+    Persona.associate = (models) => {
+        // Define la asociación uno a muchos
+        Persona.hasMany(models.cliente, { foreignKey: 'id_persona' });
+    };
+
     return Persona;
 };
