@@ -30,5 +30,8 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: true
         }
     });
+
+
+    
     return Usuario;
 };

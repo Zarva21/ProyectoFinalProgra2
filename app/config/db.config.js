@@ -26,7 +26,11 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.Personas = require('../models/personas.model.js')(sequelize, Sequelize);
+db.TipoEmpleado = require('../models/tipoempleado.model.js')(sequelize, Sequelize); // Asegúrate de cargar TipoEmpleado antes de Empleados
+db.Empleados = require('../models/empleados.model.js')(sequelize, Sequelize);
 db.Clientes = require('../models/clientes.model.js')(sequelize, Sequelize);
+
+
 
 
 

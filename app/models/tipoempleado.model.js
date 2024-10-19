@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const TipoEmpleado = sequelize.define('tipo_empleado', {
+    const TipoEmpleado = sequelize.define('tipos_empleado', {
         id_tipo_empleado: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -12,5 +12,12 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DOUBLE
         }
     });
+
+    // Definir las asociaciones
+    TipoEmpleado.associate = (models) => {
+        // Asociación uno a muchos con Empleado
+        TipoEmpleado.hasMany(models.empleado, { foreignKey: 'id_tipo_empleado' });
+    };
+
     return TipoEmpleado;
 };
