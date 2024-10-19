@@ -23,10 +23,12 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DATE
         },
         pagado: {
-            type: Sequelize.BOOLEAN
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
         },
         descripcion: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            defaultValue: "Hospedaje en hotel" 
         },
         total: {
             type: Sequelize.DOUBLE
@@ -36,5 +38,17 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: true
         }
     });
+    
+    Factura.associate = (models) => {
+        // Define las relaciones
+        Factura.belongsTo(models.Clientes, {
+            foreignKey: 'id_cliente',
+            as: 'cliente'
+        });
+        Factura.belongsTo(models.Reserva, {
+            foreignKey: 'id_reserva',
+            as: 'reserva'
+        });
+    };
     return Factura;
 };

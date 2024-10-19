@@ -10,9 +10,6 @@ exports.createReserva = async (req, res) => {
     try {
         const { id_cliente, id_habitacion, fecha_entrada, fecha_salida, metodo_pago } = req.body;
 
-
-        console.log('prueba antes ');
-
         
          // Verificar que la habitación existe y obtener el tipo de habitación y su precio
          const habitacionExistente = await Habitacion.findOne({
@@ -26,17 +23,9 @@ exports.createReserva = async (req, res) => {
             console.log('Habitación no encontrada:', id_habitacion);
             return res.status(404).json({ message: 'La habitación no existe' });
         }
-        // Mostrar en la consola la habitación que se está buscando
-        console.log('Buscando habitación con ID:', id_habitacion);
-        console.log('Habitación encontrada:', habitacionExistente);
-
-        console.log('Habitación encontrada:', habitacionExistente);
-    console.log('Tipo de habitación encontrado:', habitacionExistente.tipoHabitacion);
-
+    
         const total = habitacionExistente.tipoHabitacion.precio;
 
-        // Mostrar el total calculado
-        console.log('Total calculado para la reserva:', total);
 
         // Crear nueva reserva
         const nuevaReserva = await Reserva.create({

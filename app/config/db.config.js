@@ -34,6 +34,7 @@ db.Usuario = require('../models/usuarios.model.js')(sequelize, Sequelize); // As
 db.TipoHabitacion = require('../models/tiposdehabitacion.model.js')(sequelize, Sequelize);
 db.Habitacion = require('../models/habitaciones.model.js')(sequelize, Sequelize);
 db.Reserva = require('../models/reservas.model.js')(sequelize, Sequelize);
+db.Factura = require('../models/factura.model.js')(sequelize, Sequelize); // Asegúrate de incluir el modelo de Factura
 
 
 db.TipoHabitacion.associate(db);
