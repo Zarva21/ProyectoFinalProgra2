@@ -10,7 +10,7 @@ db.sequelize.sync({ force: true }).then(() => {
 });
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:4200', optionsSuccessStatus: 200 }));
+app.use(cors({ origin: 'http://localhost:8080', optionsSuccessStatus: 200 }));
 app.use(bodyParser.json());
 
 // Combined routes
