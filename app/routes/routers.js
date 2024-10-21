@@ -12,6 +12,7 @@ const tipoHabitacionController = require('../controllers/tipohabitacion.controll
 const tipoEmpleadoController = require('../controllers/tipoempleado.controller.js');
 const rolUsuarioController = require('../controllers/rolusuario.controller.js');
 
+const searchController = require('../controllers/search.controller.js');
 
 
 // Rutas para Clientes
@@ -57,7 +58,8 @@ router.delete('/tipoempleado/:id', tipoEmpleadoController.deleteTipoEmpleadoById
 router.post('/rolusuario', rolUsuarioController.createRolUsuario); // Crear rol de usuario
 router.delete('/rolusuario/:id', rolUsuarioController.deleteRolUsuarioById); // Eliminar rol de usuario por ID
 
-
+// Ruta de busqueda
+router.get('/search', searchController.generalSearch);
 
 
 module.exports = router;
