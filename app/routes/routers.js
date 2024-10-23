@@ -13,7 +13,7 @@ const tipoEmpleadoController = require('../controllers/tipoempleado.controller.j
 const rolUsuarioController = require('../controllers/rolusuario.controller.js');
 
 const searchController = require('../controllers/search.controller.js');
-
+const getusuarioController = require('../controllers/getusuario.controller');
 
 // Rutas para Clientes
 router.post('/api/clientes/create', clienteController.createCliente); // Crear un nuevo cliente
@@ -61,5 +61,7 @@ router.delete('/rolusuario/:id', rolUsuarioController.deleteRolUsuarioById); // 
 // Ruta de busqueda
 router.get('/search', searchController.generalSearch);
 
+// Ruta para autenticar usuario y obtener el rol
+router.post('/api/usuarios/authenticate', getusuarioController.authenticateUser);
 
 module.exports = router;

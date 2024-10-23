@@ -6,10 +6,10 @@ const RolUsuario = db.RolUsuario;
 // Crear un nuevo usuario
 exports.createUsuario = async (req, res) => {
     try {
-        const { id_rol_usuario, id_persona, usuario, contrasena } = req.body;
+        const { rol_usuario, id_persona, usuario, contrasena } = req.body;
 
         const nuevoUsuario = await Usuario.create({
-            id_rol_usuario,
+            rol_usuario,
             id_persona,
             usuario,
             contrasena,
@@ -32,14 +32,14 @@ exports.createUsuario = async (req, res) => {
 exports.updateUsuarioById = async (req, res) => {
     try {
         const id_usuario = req.params.id;
-        const { id_rol_usuario, id_persona, usuario, contrasena } = req.body;
+        const { rol_usuario, id_persona, usuario, contrasena } = req.body;
 
         const usuarioExistente = await Usuario.findByPk(id_usuario);
         if (!usuarioExistente) {
             return res.status(404).json({ message: `Usuario con id ${id_usuario} no encontrado` });
         }
 
-        usuarioExistente.id_rol_usuario = id_rol_usuario;
+        usuarioExistente.rol_usuario = rol_usuario;
         usuarioExistente.id_persona = id_persona;
         usuarioExistente.usuario = usuario;
         usuarioExistente.contrasena = contrasena;
