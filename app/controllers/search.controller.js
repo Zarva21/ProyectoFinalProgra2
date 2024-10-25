@@ -13,37 +13,6 @@ const Cliente = db.Clientes;
 const Empleado = db.Empleados;
 
 
-exports.generalSearch = async (req, res) => {
-    try {
-        const { tableName, columnName, searchValue } = req.query;
-
-        // Verifica que todos los parámetros necesarios estén presentes
-        if (!tableName || !columnName || !searchValue) {
-            return res.status(400).json({ message: 'Faltan parámetros requeridos: tableName, columnName, searchValue' });
-        }
-
-        // Verifica si la tabla especificada existe en la base de datos
-        if (!db[tableName]) {
-            return res.status(404).json({ message: 'Tabla no encontrada en la base de datos' });
-        }
-
-        const Model = db[tableName];
-
-        // Realiza la búsqueda en la tabla con la cláusula LIKE
-        const results = await Model.findAll({
-            where: {
-                [columnName]: {
-                    [db.Sequelize.Op.like]: `%${searchValue}%`
-                }
-            }
-        });
-
-        // Devuelve los resultados de la búsqueda
-        res.status(200).json(results);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al realizar la búsqueda', error: error.message });
-    }
-};
 
 exports.generalSearch = async (req, res) => {
     try {
