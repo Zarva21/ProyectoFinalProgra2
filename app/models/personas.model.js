@@ -37,9 +37,10 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     Persona.associate = (models) => {
-        // Define la asociación uno a muchos
-        Persona.hasMany(models.cliente, { foreignKey: 'id_persona' });
+        Persona.hasMany(models.cliente, { foreignKey: 'id_persona', as: 'clientes' });
+        Persona.hasMany(models.empleado, { foreignKey: 'id_persona', as: 'empleados' });
     };
+    
 
     return Persona;
 };

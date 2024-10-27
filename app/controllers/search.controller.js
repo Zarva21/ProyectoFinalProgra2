@@ -13,7 +13,6 @@ const Cliente = db.Clientes;
 const Empleado = db.Empleados;
 
 
-
 exports.generalSearch = async (req, res) => {
     try {
         const { tableName, columnName, searchValue } = req.query;
@@ -30,18 +29,36 @@ exports.generalSearch = async (req, res) => {
         }
 
         let results;
-        if (searchValue) {
-            // Si se proporciona un valor de búsqueda, hacer una búsqueda con LIKE
+
+        // Manejo de búsqueda específica para Clientes y Empleados
+        if (tableName === 'Clientes' || tableName === 'Empleados') {
+            const relatedModel = db.Personas;
+
+            // Buscamos en la tabla de Clientes o Empleados
             results = await model.findAll({
                 where: {
-                    [columnName]: {
-                        [db.Sequelize.Op.like]: `%${searchValue}%`
-                    }
-                }
+                    [columnName]: searchValue // Buscamos por el campo especificado
+                },
+                include: [{
+                    model: relatedModel,
+                    as: 'persona', // Asegúrate de que este sea el alias correcto que has definido
+                    required: true // Esto hará un INNER JOIN
+                }]
             });
         } else {
-            // Si no se proporciona un valor de búsqueda, devolver todos los registros
-            results = await model.findAll();
+            // Si se proporciona un valor de búsqueda, hacer una búsqueda con LIKE
+            if (searchValue) {
+                results = await model.findAll({
+                    where: {
+                        [columnName]: {
+                            [db.Sequelize.Op.like]: `%${searchValue}%`
+                        }
+                    }
+                });
+            } else {
+                // Si no se proporciona un valor de búsqueda, devolver todos los registros
+                results = await model.findAll();
+            }
         }
 
         res.status(200).json(results);

@@ -14,6 +14,8 @@ const rolUsuarioController = require('../controllers/rolusuario.controller.js');
 
 const searchController = require('../controllers/search.controller.js');
 const getusuarioController = require('../controllers/getusuario.controller');
+const searchControllerCE = require('../controllers/searchClientesEmpleados.controller');
+
 
 // Rutas para Clientes
 router.post('/api/clientes/create', clienteController.createCliente); // Crear un nuevo cliente
@@ -59,7 +61,12 @@ router.post('/rolusuario', rolUsuarioController.createRolUsuario); // Crear rol 
 router.delete('/rolusuario/:id', rolUsuarioController.deleteRolUsuarioById); // Eliminar rol de usuario por ID
 
 // Ruta de busqueda
-router.get('/search', searchController.generalSearch);
+router.get('/search/general', searchController.generalSearch);
+
+// Rutas para búsqueda específica de Clientes y Empleados
+router.get('/search/clientesempleados', searchControllerCE.searchClientesEmpleados);
+
+
 
 // Ruta para autenticar usuario y obtener el rol
 router.post('/api/usuarios/authenticate', getusuarioController.authenticateUser);

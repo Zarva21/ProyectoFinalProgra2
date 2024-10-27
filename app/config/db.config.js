@@ -40,4 +40,6 @@ db.Factura = require('../models/factura.model.js')(sequelize, Sequelize);
 db.TipoHabitacion.associate(db);
 db.Habitacion.associate(db);
 
+
+
 module.exports = db;
