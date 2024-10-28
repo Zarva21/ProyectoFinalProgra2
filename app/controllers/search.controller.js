@@ -52,12 +52,15 @@ exports.generalSearch = async (req, res) => {
                     where: {
                         [columnName]: {
                             [db.Sequelize.Op.like]: `%${searchValue}%`
-                        }
+                         },
+                        estado: true // Filtra registros activos
                     }
                 });
             } else {
                 // Si no se proporciona un valor de búsqueda, devolver todos los registros
-                results = await model.findAll();
+                results = await model.findAll({
+                    where: { estado: true } // Filtra registros activos sin búsqueda específica
+                });
             }
         }
 
