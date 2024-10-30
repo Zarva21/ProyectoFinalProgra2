@@ -6,7 +6,7 @@ const sequelize = new Sequelize(env.database, env.username, env.password, {
     dialect: env.dialect,
     dialectOptions: {
         ssl: {
-            require: true,
+            require: false,
             rejectUnauthorized: false
         }
     },
