@@ -63,8 +63,15 @@ router.delete('/rolusuario/:id', rolUsuarioController.deleteRolUsuarioById); // 
 // Ruta de busqueda
 router.get('/search/general', searchController.generalSearch);
 
+router.get('/getTipoNombres', searchController.getTipoNombres);
+
 // Rutas para búsqueda específica de Clientes y Empleados
 router.get('/search/clientesempleados', searchControllerCE.searchClientesEmpleados);
+
+
+
+
+
 
 
 
