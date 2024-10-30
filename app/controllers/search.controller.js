@@ -97,3 +97,26 @@ exports.getTipoNombres = async (req, res) => {
         });
     }
 };
+
+
+exports.getTipoHabitacionNombres = async (req, res) => {
+    try {
+        const model = db.TipoHabitacion;
+
+        if (!model) {
+            return res.status(404).json({ message: `La tabla TipoHabitacion no existe` });
+        }
+
+        // Obtener solo los nombres de los tipos de habitación
+        const results = await model.findAll({
+            attributes: ['nombre'] // Suponiendo que el campo que contiene el nombre es 'nombre'
+        });
+
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({
+            message: "Error al obtener los nombres de los tipos de habitación",
+            error: error.message
+        });
+    }
+};
