@@ -120,8 +120,7 @@ exports.getTipoNombres = async (req, res) => {
 
         // Realizamos la búsqueda solo de los registros activos y obtenemos solo el campo 'nombre'
         const results = await model.findAll({
-            attributes: ['nombre'],
-            where: { estado: true } // Filtra solo los registros activos
+            attributes: ['nombre'] // Filtra solo los registros activos
         });
 
         // Mapeamos los resultados para devolver solo una lista de nombres
