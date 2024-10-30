@@ -4,13 +4,14 @@ const Reserva = db.Reserva; // Modelo de Reserva
 const Cliente = db.Clientes; // Modelo de Cliente
 const Habitacion = db.Habitacion; // Modelo de Habitacion
 const TipoHabitacion = db.TipoHabitacion; // Modelo de TipoHabitacion
+const Personas = db.Personas; // Modelo de Personas
 
 // Crear una nueva reserva
 exports.createReserva = async (req, res) => {
     try {
-        const { id_cliente, id_habitacion, fecha_entrada, fecha_salida, metodo_pago } = req.body;
+        const { dpi_persona, id_habitacion, fecha_entrada, fecha_salida, metodo_pago } = req.body;
 
-        
+        console.log(dpi_persona)
          // Verificar que la habitación existe y obtener el tipo de habitación y su precio
          const habitacionExistente = await Habitacion.findOne({
             where: { id_habitacion, disponible: true },
@@ -24,12 +25,28 @@ exports.createReserva = async (req, res) => {
             return res.status(404).json({ message: 'La habitación no existe' });
         }
     
+         // Buscar a la persona por su DPI
+         const persona = await Personas.findOne({ where: { dpi: dpi_persona } });
+         if (!persona) {
+             return res.status(404).json({ message: "Persona no encontrada" });
+         }
+         console.log(persona)
+
+ 
+         // Obtener el ID de cliente asociado a la persona
+         const cliente = await Cliente.findOne({ where: { id_persona: persona.id_persona } });
+         if (!cliente) {
+             return res.status(404).json({ message: "Cliente no encontrado" });
+         }
+
+
+
         const total = habitacionExistente.tipoHabitacion.precio;
 
 
         // Crear nueva reserva
         const nuevaReserva = await Reserva.create({
-            id_cliente,
+            id_cliente: cliente.id_cliente,
             id_habitacion,
             fecha_entrada,
             fecha_salida,
@@ -38,6 +55,12 @@ exports.createReserva = async (req, res) => {
             situacion: "disponible", // Asignar estado automático
             estado: true // Estado predeterminado
         });
+
+          // Actualizar el estado de la habitación a no disponible
+          habitacionExistente.disponible = false;
+          await habitacionExistente.save();    
+
+
 
           // Mostrar en la consola la reserva que se está creando
           console.log('Reserva creada:', nuevaReserva);
@@ -58,7 +81,22 @@ exports.createReserva = async (req, res) => {
 exports.updateReservaById = async (req, res) => {
     try {
         const id_reserva = req.params.id;
-        const { id_habitacion, fecha_entrada, fecha_salida, metodo_pago, situacion } = req.body;
+        const { dpi_persona, id_habitacion, fecha_entrada, fecha_salida, metodo_pago, situacion } = req.body;
+
+
+
+        // Buscar a la persona por su DPI
+        const persona = await db.Personas.findOne({ where: { dpi: dpi_persona } });
+        if (!persona) {
+            return res.status(404).json({ message: "Persona no encontrada" });
+        }
+
+        // Obtener el ID de cliente asociado a la persona
+        const cliente = await Cliente.findOne({ where: { id_persona: persona.id_persona } });
+        if (!cliente) {
+            return res.status(404).json({ message: "Cliente no encontrado" });
+        }
+
 
         // Buscar la reserva existente por ID
         const reservaExistente = await Reserva.findByPk(id_reserva);
@@ -79,8 +117,17 @@ exports.updateReservaById = async (req, res) => {
                 return res.status(400).json({ message: "La nueva habitación seleccionada no está disponible" });
             }
 
+            // Actualizar la disponibilidad de la antigua habitación a disponible
+            const antiguaHabitacion = await Habitacion.findByPk(reservaExistente.id_habitacion);
+            antiguaHabitacion.disponible = true;
+            await antiguaHabitacion.save();
+
             // Actualizar el ID de habitación en la reserva
             reservaExistente.id_habitacion = id_habitacion;
+
+            // Cambiar la nueva habitación a no disponible
+            nuevaHabitacion.disponible = false;
+            await nuevaHabitacion.save();
         }
 
         // Actualizar fechas y otros campos de la reserva

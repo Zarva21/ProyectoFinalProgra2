@@ -12,12 +12,9 @@ module.exports = (sequelize, Sequelize) => {
                 key: 'id_persona'
             }
         },
-        id_rol_usuario: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: 'roles_usuarios',
-                key: 'id_rol_usuario'
-            }
+        rol_usuario: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false
         },
         usuario: {
             type: Sequelize.STRING(20)
@@ -32,10 +29,6 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     Usuario.associate = (models) => {
-        Usuario.belongsTo(models.RolUsuario, {
-            foreignKey: 'id_rol_usuario',
-            as: 'rol'
-        });
         Usuario.belongsTo(models.Persona, {
             foreignKey: 'id_persona',
             as: 'persona'

@@ -1,4 +1,5 @@
-
+const db = require('../config/db.config.js');
+const Usuario = db.Usuario;
 
 /*
 conseguir el rol del usuario con la contrase;a y el usuario, primero validar si hay una respues de que 
@@ -23,3 +24,44 @@ estado	Boolean
 
 
 */
+
+
+exports.authenticateUser = async (req, res) => {
+    try {
+        const { usuario, contrasena } = req.body;
+
+        // Validar que los campos no estén vacíos
+        if (!usuario || !contrasena) {
+            return res.status(400).json({ message: "Usuario y contraseña son obligatorios" });
+        }
+
+        // Buscar el usuario en la base de datos
+        const user = await Usuario.findOne({
+            where: {
+                usuario: usuario,
+                contrasena: contrasena
+            }
+        });
+
+        // Verificar si el usuario existe
+        if (!user) {
+            return res.status(404).json({ message: "Usuario o contraseña incorrectos" });
+        }
+
+        // Obtener el rol del usuario
+        const esAdministrador = user.rol_usuario;
+
+        // Responder con el rol del usuario
+        res.status(200).json({
+            message: "Autenticación exitosa",
+            usuario: user.usuario,
+            rol: esAdministrador ? "Administrador" : "Usuario Regular",
+            estado: user.estado
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error al autenticar el usuario",
+            error: error.message
+        });
+    }
+};

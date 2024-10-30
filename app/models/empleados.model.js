@@ -29,10 +29,13 @@ module.exports = (sequelize, Sequelize) => {
     Empleado.associate = (models) => {
         // Asociación muchos a uno con Persona
         Empleado.belongsTo(models.persona, { foreignKey: 'id_persona' });
+
         
         // Asociación muchos a uno con TipoEmpleado
         Empleado.belongsTo(models.tipo_empleado, { foreignKey: 'id_tipo_empleado' });
     };
+
+   
 
     return Empleado;
 };

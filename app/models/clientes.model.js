@@ -24,7 +24,11 @@ module.exports = (sequelize, Sequelize) => {
     Cliente.associate = (models) => {
         // Define la asociación muchos a uno
         Cliente.belongsTo(models.persona, { foreignKey: 'id_persona' });
+
     };
+
+    
+
 
     return Cliente;
 };

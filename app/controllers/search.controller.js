@@ -17,43 +17,10 @@ exports.generalSearch = async (req, res) => {
     try {
         const { tableName, columnName, searchValue } = req.query;
 
-        // Verifica que todos los parámetros necesarios estén presentes
-        if (!tableName || !columnName || !searchValue) {
-            return res.status(400).json({ message: 'Faltan parámetros requeridos: tableName, columnName, searchValue' });
-        }
-
-        // Verifica si la tabla especificada existe en la base de datos
-        if (!db[tableName]) {
-            return res.status(404).json({ message: 'Tabla no encontrada en la base de datos' });
-        }
-
-        const Model = db[tableName];
-
-        // Realiza la búsqueda en la tabla con la cláusula LIKE
-        const results = await Model.findAll({
-            where: {
-                [columnName]: {
-                    [db.Sequelize.Op.like]: `%${searchValue}%`
-                }
-            }
-        });
-
-        // Devuelve los resultados de la búsqueda
-        res.status(200).json(results);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al realizar la búsqueda', error: error.message });
-    }
-};
-
-exports.generalSearch = async (req, res) => {
-    try {
-        const { tableName, columnName, searchValue } = req.query;
-
         if (!tableName || !columnName) {
             return res.status(400).json({ message: "Debe especificar el nombre de la tabla y la columna" });
         }
 
-        // Obtener el modelo de la tabla especificada
         const model = db[tableName];
 
         if (!model) {
@@ -61,18 +28,21 @@ exports.generalSearch = async (req, res) => {
         }
 
         let results;
+
+        // Búsqueda general para cualquier tabla con la columna "estado" 
         if (searchValue) {
-            // Si se proporciona un valor de búsqueda, hacer una búsqueda con LIKE
             results = await model.findAll({
                 where: {
                     [columnName]: {
                         [db.Sequelize.Op.like]: `%${searchValue}%`
-                    }
+                    },
+                    estado: true // Filtra registros activos si la tabla contiene esta columna
                 }
             });
         } else {
-            // Si no se proporciona un valor de búsqueda, devolver todos los registros
-            results = await model.findAll();
+            results = await model.findAll({
+                where: { estado: true } // Filtra registros activos sin búsqueda específica
+            });
         }
 
         res.status(200).json(results);
@@ -86,30 +56,67 @@ exports.generalSearch = async (req, res) => {
 
 
 
-/*  
-la cosa es que si una persona en un formulario de cleinte, y quisiera dar el id del ciente,
-el id de cleinte no esta en persona, lo mismo en la talba de empleado que no podra encotnrar eso mismo ya que alf ianl en empleados y cliente son los 
-unicos que tengran ese extra en el ual estan relacionados a otra tabla de la cual tiene la informacion general
 
-PERSONAS 	        
-Id Persona	primary key 
-Nombre	Varchar(20)
-Apellido	Varchar(20)
-Fecha Nacimiento	Date
-Nit	varchar(20)
-Correo 	varchar(40)
-Genero	varchar(1)
-DPI	Int (20)
-Numero	int
-Estado	Boolean
 
-CLIENTES	
-Id Persona	primary key
-ID cliente	serial
-	
-EMPLEADOS	
-Id persona 	primary key 
-Id Empleado	serial 
-id tipo empleado	primary key 
-Activo	Boolean
-*/
+exports.getTipoNombres = async (req, res) => {
+    try {
+        const { tableName, columnName, searchValue } = req.query;
+
+        // Limitar a TipoHabitacion o TipoEmpleado
+        if (tableName !== 'TipoHabitacion' && tableName !== 'TipoEmpleado') {
+            return res.status(400).json({ message: "Tabla no permitida. Use TipoHabitacion o TipoEmpleado." });
+        }
+
+        const model = db[tableName];
+
+        if (!model) {
+            return res.status(404).json({ message: `La tabla ${tableName} no existe` });
+        }
+
+        let results;
+
+        // Si hay un valor de búsqueda
+        if (searchValue) {
+            results = await model.findAll({
+                where: {
+                    [columnName]: {
+                        [db.Sequelize.Op.like]: `%${searchValue}%`
+                    }
+                }
+            });
+        } else {
+            // Si no hay un valor de búsqueda, traer todos los registros de la tabla
+            results = await model.findAll();
+        }
+
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({
+            message: "Error al obtener los datos",
+            error: error.message
+        });
+    }
+};
+
+
+exports.getTipoHabitacionNombres = async (req, res) => {
+    try {
+        const model = db.TipoHabitacion;
+
+        if (!model) {
+            return res.status(404).json({ message: `La tabla TipoHabitacion no existe` });
+        }
+
+        // Obtener solo los nombres de los tipos de habitación
+        const results = await model.findAll({
+            attributes: ['nombre'] // Suponiendo que el campo que contiene el nombre es 'nombre'
+        });
+
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({
+            message: "Error al obtener los nombres de los tipos de habitación",
+            error: error.message
+        });
+    }
+};
