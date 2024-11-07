@@ -35,7 +35,7 @@ db.TipoHabitacion = require('../models/tiposdehabitacion.model.js')(sequelize, S
 db.Habitacion = require('../models/habitaciones.model.js')(sequelize, Sequelize);
 db.Reserva = require('../models/reservas.model.js')(sequelize, Sequelize);
 db.Factura = require('../models/factura.model.js')(sequelize, Sequelize); 
-
+db.Juego = require('../models/juegoalq.model.js')(sequelize, Sequelize);
 
 db.TipoHabitacion.associate(db);
 db.Habitacion.associate(db);
